@@ -19,13 +19,14 @@ DynamicJson
 目安としてはPCの搭載メモリを4で割った数で指定すればいいでしょう。
 
 # License
-ライセンスはまだ決めていませんが、世間一般で言われているフリーソフトと思ってください。
+
+This software is released under the MIT License, see LICENSE.txt.
 
 # Authors
-bry-ful (Hiroshi Furuhashi)
 
-bryful @ twittwe
-bryful@gmail.com
+bry-ful(Hiroshi Furuhashi) http://bryful.yuzu.bz/  
+twitter:[bryful](https://twitter.com/bryful)  
+bryful@gmail.com  
 
 # References
 自動レンダリングとネットワークレンダリング
