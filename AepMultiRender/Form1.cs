@@ -99,7 +99,7 @@ namespace AepMultiRender
 			{
 				cmbAerender.Items.Add(p);
 			}
-			cmbAerender.SelectedIndex = amr.SelectedAerenderIndex;
+			cmbAerender.SelectedIndex = amr.SelectedIndex;
 
 			numJobCount.Value = amr.JobCount;
 
@@ -169,15 +169,14 @@ namespace AepMultiRender
 		//------------------------------------------------------------------------
 		private void cmbAerender_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			amr.SelectedAerenderIndex = cmbAerender.SelectedIndex;
+			amr.AerenderPath = cmbAerender.SelectedItem.ToString();
 		}
 		//------------------------------------------------------------------------
 		public void PrefSave()
 		{
 			dynamic root = new DynamicJson(); // ルートのコンテナ
 
-			root.aerenderList = amr.AerenderList;
-			root.SelectedAerenderIndex = amr.SelectedAerenderIndex;
+			root.AerenderPath = amr.AerenderPath;
 			root.JobCount = amr.JobCount;
 
 			root.LX = this.Location.X;
@@ -203,19 +202,12 @@ namespace AepMultiRender
 			string str = File.ReadAllText(p, Encoding.GetEncoding("utf-8"));
 
 			var json = DynamicJson.Parse(str);
-			string[] lst;
-			int idx;
 			int jc;
 			int x=0, y=0, w=0, h=0;
-			if (json.IsDefined("aerenderList") == true)
+			if (json.IsDefined("AerenderPath") == true)
 			{
-				lst = (string[])json.aerenderList;
-				amr.AerenderList = lst;
-			}
-			if (json.IsDefined("SelectedAerenderIndex") == true)
-			{
-				idx = (int)json.SelectedAerenderIndex;
-				amr.SelectedAerenderIndex = idx;
+				string ap = json.AerenderPath;
+				amr.AerenderPath = ap;
 			}
 			if (json.IsDefined("JobCount") == true)
 			{

@@ -22,7 +22,9 @@ namespace AepMultiRender
 		private bool m_IsRunning = false;
 		private int m_JobCount = 8;
 		private string m_AepPath = "";
-		private int m_index = 0;
+		private int m_selectedIndex = -1;
+		public int SelectedIndex
+		{ get { return m_selectedIndex; } }
 
 		private List<Aerender> m_ProcList = new List<Aerender>();
 
@@ -40,8 +42,9 @@ namespace AepMultiRender
 			@"C:\Program Files\Adobe\Adobe After Effects CC 2017\Support Files\aerender.exe",
 			@"C:\Program Files\Adobe\Adobe After Effects CC 2018\Support Files\aerender.exe",
 			@"C:\Program Files\Adobe\Adobe After Effects CC 2019\Support Files\aerender.exe",
-			@"C:\Program Files\Adobe\Adobe After Effects CC 2020\Support Files\aerender.exe",
-			@"C:\Program Files\Adobe\Adobe After Effects CC 2021\Support Files\aerender.exe"
+			@"C:\Program Files\Adobe\Adobe After Effects 2020\Support Files\aerender.exe",
+			@"C:\Program Files\Adobe\Adobe After Effects 2021\Support Files\aerender.exe",
+			@"C:\Program Files\Adobe\Adobe After Effects 2022\Support Files\aerender.exe"
 
 		};
 		private List<string> m_aerenderList = new List<string>();
@@ -70,23 +73,23 @@ namespace AepMultiRender
 			}
 			if(m_aerenderList.Count>0)
 			{
-				m_index = 0;
+				m_selectedIndex = 0;
 			}
 			else
 			{
-				m_index = -1;
+				m_selectedIndex = -1;
 			}
 			ChkCanExec();
 		}
 		//------------------------------------------------
 		private void ChkCanExec()
 		{
-			m_CanExec = ((m_aerenderList.Count > 0) && (m_index < m_aerenderList.Count) && (m_AepPath != ""));
+			m_CanExec = ((m_aerenderList.Count > 0) && (m_selectedIndex < m_aerenderList.Count) && (m_AepPath != ""));
 		}
 		//------------------------------------------------
 		public bool IsAerender
 		{
-			get { return ((m_aerenderList.Count > 0) && (m_index < m_aerenderList.Count)); }
+			get { return ((m_aerenderList.Count > 0) && (m_selectedIndex < m_aerenderList.Count)); }
 		}
 		//------------------------------------------------
 		public bool Enabled
@@ -139,11 +142,6 @@ namespace AepMultiRender
 		public string [] AerenderList
 		{
 			get { return m_aerenderList.ToArray(); }
-			set
-			{
-				m_aerenderList.Clear();
-				m_aerenderList = value.ToList();
-			}
 		}
 		//------------------------------------------------
 		public bool IsRunning
@@ -160,35 +158,10 @@ namespace AepMultiRender
 			}
 		}
 		//------------------------------------------------
-		public void SetPref(string[] lst,int sidx, int jc)
+		public void SetPref(string aerenderP, int jc)
 		{
-			m_aerenderList.Clear();
-			m_aerenderList = lst.ToList();
-			m_index = sidx;
+			AerenderPath = aerenderP;
 			m_JobCount = jc;
-
-		}
-		//------------------------------------------------
-		public int SelectedAerenderIndex
-		{
-			get { return m_index; }
-
-			set
-			{
-				if (m_aerenderList.Count > 0)
-				{
-
-					if (value < 0) value = 0;
-					else if (value > m_aerenderList.Count - 1) value = m_aerenderList.Count - 1;
-
-					m_index = value;
-				}
-				else
-				{
-					m_index = -1;
-				}
-				ChkCanExec();
-			}
 
 		}
 		//------------------------------------------------
@@ -196,13 +169,13 @@ namespace AepMultiRender
 		{
 			get
 			{
-				if (m_aerenderList.Count <= 0)
+				if ((m_aerenderList.Count <= 0)||(m_selectedIndex<0))
 				{
 					return "";
 				}
 				else
 				{
-					return m_aerenderList[m_index];
+					return m_aerenderList[m_selectedIndex];
 				}
 			}
 			set
@@ -228,12 +201,12 @@ namespace AepMultiRender
 				}
 				if(idx>=0)
 				{
-					m_index = idx;
+					m_selectedIndex = idx;
 				}
 				else
 				{
 					m_aerenderList.Insert(0, p);
-					m_index = 0;
+					m_selectedIndex = 0;
 				}
 				ChkCanExec();
 			}
@@ -256,12 +229,12 @@ namespace AepMultiRender
 			if (m_IsRunning == true) return ret;
 			if (m_AepPath == "") return ret;
 			if(m_aerenderList.Count <=0) return ret;
-			if (m_index < 0) return ret;
+			if (m_selectedIndex < 0) return ret;
 
 			m_ProcList.Clear();
 			if (m_JobCount > 0)
 			{
-				string ap = m_aerenderList[m_index];
+				string ap = m_aerenderList[m_selectedIndex];
 
 				int cnt = 0;
 				for (int i = 0; i < m_JobCount; i++)
